@@ -3,6 +3,7 @@ package com.miroslavka.gym.entity;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "ejercicios")
@@ -13,24 +14,32 @@ public class Ejercicio {
     private int id;
 
     @Column(nullable = true)
-    private ArrayList<Integer> series;
+    private List<Integer> series;
     @Column(nullable = true)
-    private ArrayList<Integer> reps;
+    private List<Integer> reps;
     @Column(nullable = true)
-    private ArrayList<Integer> pesos;
+    private List<Integer> pesos;
 
-//    @ManyToOne
-//    @JoinColumn(name = "entrenamiento")
-//    private Entrenamiento entrenamiento;
+    @ManyToOne
+    @JoinColumn(name = "entrenamiento_id")
+    private Entrenamiento entrenamiento;
 
-    private String ejercicioData;
+    @Column()
+    private String ejercicio;
 
 
-    public Ejercicio(ArrayList<Integer> reps, ArrayList<Integer> pesos, ArrayList<Integer> series, String ejercicioData) {
+    @OneToOne(mappedBy = "ejercicio", cascade = CascadeType.ALL)
+    private EjercicioData ejercicioData;
+
+
+    public Ejercicio() {
+    }
+
+    public Ejercicio(List<Integer> reps, List<Integer> pesos, List<Integer> series, String ejercicio) {
         this.reps = reps;
         this.pesos = pesos;
         this.series = series;
-        this.ejercicioData = ejercicioData;
+        this.ejercicio = ejercicio;
     }
 
     public int getId() {
@@ -41,15 +50,15 @@ public class Ejercicio {
         this.id = id;
     }
 
-//    public Entrenamiento getEntrenamiento() {
-//        return entrenamiento;
-//    }
-//
-//    public void setEntrenamiento(Entrenamiento entrenamiento) {
-//        this.entrenamiento = entrenamiento;
-//    }
+    public Entrenamiento getEntrenamiento() {
+        return entrenamiento;
+    }
 
-    public ArrayList<Integer> getSeries() {
+    public void setEntrenamiento(Entrenamiento entrenamiento) {
+        this.entrenamiento = entrenamiento;
+    }
+
+    public List<Integer> getSeries() {
         return series;
     }
 
@@ -57,7 +66,7 @@ public class Ejercicio {
         this.series = series;
     }
 
-    public ArrayList<Integer> getReps() {
+    public List<Integer> getReps() {
         return reps;
     }
 
@@ -65,7 +74,7 @@ public class Ejercicio {
         this.reps = reps;
     }
 
-    public ArrayList<Integer> getPesos() {
+    public List<Integer> getPesos() {
         return pesos;
     }
 
@@ -73,14 +82,13 @@ public class Ejercicio {
         this.pesos = pesos;
     }
 
-    public String getEjercicioData() {
-        return ejercicioData;
+    public String getEjercicio() {
+        return ejercicio;
     }
 
-    public void setEjercicioData(String ejercicioData) {
-        this.ejercicioData = ejercicioData;
+    public void setEjercicio(String ejercicio) {
+        this.ejercicio = ejercicio;
     }
-
 
 
 }

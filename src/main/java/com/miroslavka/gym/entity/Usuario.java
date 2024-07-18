@@ -1,58 +1,86 @@
 package com.miroslavka.gym.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
 
 @Entity
+@EntityListeners(AuditingEntityListener.class)
 @Table(name = "usuarios")
 public class Usuario {
 
 
-//
-//    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
-//    private ArrayList<Entrenamiento> entrenamientos;
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", unique = true)
     private int id;
 
     @Column(nullable = false, unique = true)
     private String usuario;
 
-    @Column(nullable = false, name = "contrasenya")
-    private String contrasenyaEncriptada;
+    @NotBlank
+    @Column(nullable = false, name = "password")
+    private String password;
 
+    @Email
+    @NotBlank
     @Column(nullable = false, updatable = true)
     private String email;
 
     @CreatedDate
-    @Column(nullable = false, updatable = false)
+    @Column(updatable = false)
+    @JsonFormat(pattern = "dd/MM/yyyy HH:mm")
     private LocalDateTime createdAt;
 
     @LastModifiedDate
-    @Column(nullable = false)
+    @Column()
+    @JsonFormat(pattern = "dd/MM/yyyy HH:mm")
     private LocalDateTime updatedAt;
 
-    public Usuario(LocalDateTime createdAt, String email, String contrasenyaEncriptada, String usuario, int id) {
+    @OneToMany(mappedBy = "usuario")
+    private List<Entrenamiento> entrenamientos = new ArrayList<>();
+
+
+    public Usuario() {
+    }
+
+    public Usuario(String email, String password) {
+        this.email = email;
+        this.password = password;
+    }
+
+    public Usuario(String usuario, String password, String email) {
+        this.usuario = usuario;
+        this.password = password;
+        this.email = email;
+    }
+
+    public Usuario(LocalDateTime createdAt, String email, String password, String usuario, int id) {
         this.createdAt = createdAt;
         this.email = email;
-        this.contrasenyaEncriptada = contrasenyaEncriptada;
+        this.password = password;
         this.usuario = usuario;
         this.id = id;
     }
 
     //GETTERS AND SETTERS
 
-    public int getId() {
+    public int getUsuario_id() {
         return id;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setUsuario_id(int usuario_id) {
+        this.id = usuario_id;
     }
 
     public String getUsuario() {
@@ -63,12 +91,12 @@ public class Usuario {
         this.usuario = usuario;
     }
 
-    public String getContrasenyaEncriptada() {
-        return contrasenyaEncriptada;
+    public String getPassword() {
+        return password;
     }
 
-    public void setContrasenyaEncriptada(String contrasenyaEncriptada) {
-        this.contrasenyaEncriptada = contrasenyaEncriptada;
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public String getEmail() {
@@ -96,12 +124,12 @@ public class Usuario {
         this.createdAt = createdAt;
     }
 
-//    public ArrayList<Entrenamiento> getEntrenamientos() {
-//        return entrenamientos;
-//    }
-//
-//    public void setEntrenamientos(ArrayList<Entrenamiento> entrenamientos) {
-//        this.entrenamientos = entrenamientos;
-//    }
+    public List<Entrenamiento> getEntrenamientos() {
+        return entrenamientos;
+    }
+
+    public void setEntrenamientos(List<Entrenamiento> entrenamientos) {
+        this.entrenamientos = entrenamientos;
+    }
 
 }

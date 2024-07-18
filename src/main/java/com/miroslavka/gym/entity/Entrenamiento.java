@@ -1,11 +1,15 @@
 package com.miroslavka.gym.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
+import java.util.List;
 
 @Entity
+@EntityListeners(AuditingEntityListener.class)
 @Table(name = "entrenamientos")
 public class Entrenamiento {
 
@@ -15,44 +19,52 @@ public class Entrenamiento {
     private int id;
 
     @Column(nullable = false)
-    private LocalDate fecha;
+    private String entrenamiento;
 
-//    @OneToMany(mappedBy = "entrenamiento", cascade = CascadeType.ALL, orphanRemoval = true)
-//    private ArrayList<Ejercicio> ejerciciosRealizados;
+    @CreatedDate
+    @Column(nullable = false)
+    @JsonFormat(pattern = "dd/MM/yyyy")
+    private LocalDate createdAt;
+
+    @OneToMany(mappedBy = "entrenamiento", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Ejercicio> ejerciciosRealizados;
 
     @Column(nullable = false)
     private String observaciones;
 
 
-//    @ManyToOne
-//    @JoinColumn(name = "id")
-//    private Usuario usuario;
+    @ManyToOne
+    @JoinColumn(name = "usuario_id")
+    private Usuario usuario;
 
+    public Entrenamiento() {
+    }
 
-    public Entrenamiento(LocalDate fecha, ArrayList<Ejercicio> ejerciciosRealizados, String observaciones, Usuario usuario) {
-        this.fecha = fecha;
-//        this.ejerciciosRealizados = ejerciciosRealizados;
+    public Entrenamiento(LocalDate createdAt, String observaciones, String entrenamiento, Usuario usuario) {
+        this.createdAt = createdAt;
+        this.ejerciciosRealizados = ejerciciosRealizados;
         this.observaciones = observaciones;
-//        this.usuario = usuario;
+        this.entrenamiento = entrenamiento;
+        this.usuario = usuario;
     }
 
 //GETTERS AND SETTERS
 
-    public LocalDate getFecha() {
-        return fecha;
+    public LocalDate getCreatedAt() {
+        return createdAt;
     }
 
-    public void setFecha(LocalDate fecha) {
-        this.fecha = fecha;
+    public void setCreatedAt(LocalDate fecha) {
+        this.createdAt = createdAt;
     }
 
-//    public ArrayList<Ejercicio> getEjerciciosRealizados() {
-//        return ejerciciosRealizados;
-//    }
-//
-//    public void setEjerciciosRealizados(ArrayList<Ejercicio> ejerciciosRealizados) {
-//        this.ejerciciosRealizados = ejerciciosRealizados;
-//    }
+    public List<Ejercicio> getEjerciciosRealizados() {
+        return ejerciciosRealizados;
+    }
+
+    public void setEjerciciosRealizados(List<Ejercicio> ejerciciosRealizados) {
+        this.ejerciciosRealizados = ejerciciosRealizados;
+    }
 
     public String getObservaciones() {
         return observaciones;
@@ -62,13 +74,21 @@ public class Entrenamiento {
         this.observaciones = observaciones;
     }
 
-//    public Usuario getUsuario() {
-//        return usuario;
-//    }
-//
-//    public void setUsuario(Usuario usuario) {
-//        this.usuario = usuario;
-//    }
+    public String getEntrenamiento() {
+        return entrenamiento;
+    }
+
+    public void setEntrenamiento(String entrenamiento) {
+        this.entrenamiento = entrenamiento;
+    }
+
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
+    }
 
     public int getId() {
         return id;
