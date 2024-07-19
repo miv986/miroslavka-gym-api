@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -28,12 +30,15 @@ public class Usuario {
     @Column(nullable = false, unique = true)
     private String usuario;
 
-    @NotBlank
+    @NotBlank(message = "La contraseña es obligatoria")
+    @Size(min = 6, message = "Al menos 6 carácteres")
+    @Pattern(regexp = "^(?=.*[A-Z])(?=.*[!@#$%^&*(),.?\":{}|<>]).*$",
+            message = "La contraseña debe contener al menos una letra mayúscula y un carácter especial")
     @Column(nullable = false, name = "password")
     private String password;
 
-    @Email
-    @NotBlank
+    @Email(message = "El email debe ser válido")
+    @NotBlank(message = "El email es obligatorio")
     @Column(nullable = false, updatable = true)
     private String email;
 
