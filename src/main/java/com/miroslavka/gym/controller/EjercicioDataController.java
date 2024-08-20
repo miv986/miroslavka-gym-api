@@ -1,10 +1,16 @@
 package com.miroslavka.gym.controller;
 
 
+import com.miroslavka.gym.entity.Ejercicio;
 import com.miroslavka.gym.entity.EjercicioData;
+import com.miroslavka.gym.entity.GrupoMuscular;
 import com.miroslavka.gym.repository.EjercicioDataRepository;
+import com.miroslavka.gym.service.EjercicioDataService;
+import com.miroslavka.gym.service.EjercicioService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -14,12 +20,11 @@ import java.util.Optional;
 @RequestMapping("/ejercicio_data")
 public class EjercicioDataController {
 
+    @Autowired
     private EjercicioDataRepository ejercicioDataRepository;
 
     @Autowired
-    public EjercicioDataController(EjercicioDataRepository ejercicioDataRepository) {
-        this.ejercicioDataRepository = ejercicioDataRepository;
-    }
+    private EjercicioDataService ejercicioDataService;
 
 
     //CREAR EJERCICIODATA
@@ -60,6 +65,18 @@ public class EjercicioDataController {
             return ejercicioData;
         }
         return null;
+    }
+
+    //Filtrar x grupo muscular
+    @GetMapping("/grupoMuscular/{grupoMuscular}")
+    public ResponseEntity<List<EjercicioData>> obtenerEjerciciosXGrupoMuscular(@PathVariable GrupoMuscular grupoMuscular) {
+        List<EjercicioData> listaEjercicioData = ejercicioDataService.obtenerEjerciciosXGrupoMuscular(grupoMuscular);
+
+        if (listaEjercicioData.isEmpty()){
+            ResponseEntity.status(HttpStatus.NOT_FOUND).body("No hay ejercicios");
+        }
+
+        return ResponseEntity.ok(listaEjercicioData);
     }
 
 

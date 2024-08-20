@@ -1,8 +1,9 @@
 package com.miroslavka.gym.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.miroslavka.gym.repository.EjercicioDataRepository;
 import jakarta.persistence.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -22,13 +23,16 @@ public class Ejercicio {
 
     @ManyToOne
     @JoinColumn(name = "entrenamiento_id")
+    @JsonBackReference
     private Entrenamiento entrenamiento;
 
     @Column()
     private String ejercicio;
 
 
-    @OneToOne(mappedBy = "ejercicio", cascade = CascadeType.ALL)
+    @ManyToOne
+    @JoinColumn(name = "ejercicio_data_id")
+    @JsonBackReference
     private EjercicioData ejercicioData;
 
 
@@ -50,19 +54,11 @@ public class Ejercicio {
         this.id = id;
     }
 
-    public Entrenamiento getEntrenamiento() {
-        return entrenamiento;
-    }
-
-    public void setEntrenamiento(Entrenamiento entrenamiento) {
-        this.entrenamiento = entrenamiento;
-    }
-
     public List<Integer> getSeries() {
         return series;
     }
 
-    public void setSeries(ArrayList<Integer> series) {
+    public void setSeries(List<Integer> series) {
         this.series = series;
     }
 
@@ -70,7 +66,7 @@ public class Ejercicio {
         return reps;
     }
 
-    public void setReps(ArrayList<Integer> reps) {
+    public void setReps(List<Integer> reps) {
         this.reps = reps;
     }
 
@@ -78,8 +74,16 @@ public class Ejercicio {
         return pesos;
     }
 
-    public void setPesos(ArrayList<Integer> pesos) {
+    public void setPesos(List<Integer> pesos) {
         this.pesos = pesos;
+    }
+
+    public Entrenamiento getEntrenamiento() {
+        return entrenamiento;
+    }
+
+    public void setEntrenamiento(Entrenamiento entrenamiento) {
+        this.entrenamiento = entrenamiento;
     }
 
     public String getEjercicio() {
@@ -90,5 +94,12 @@ public class Ejercicio {
         this.ejercicio = ejercicio;
     }
 
+    public EjercicioData getEjercicioData() {
+        return ejercicioData;
+    }
+
+    public void setEjercicioData(EjercicioData ejercicioData) {
+        this.ejercicioData = ejercicioData;
+    }
 
 }
