@@ -49,7 +49,7 @@ public class UsuarioController {
 
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@Valid @RequestBody Map<String, String> request) {
+    public ResponseEntity login(@Valid @RequestBody Map<String, String> request) {
         String email = request.get("email");
         String password = request.get("password");
         if (email == null || email.isEmpty() || password == null || password.isEmpty()) {
@@ -57,7 +57,8 @@ public class UsuarioController {
         }
         boolean logueado = usuarioService.loginUsuario(email, password);
         if (logueado) {
-            return ResponseEntity.ok("true");
+            Usuario usuario = usuarioService.getUserByEmail(email);
+            return ResponseEntity.ok(usuario);
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Credenciales incorrectas");
         }

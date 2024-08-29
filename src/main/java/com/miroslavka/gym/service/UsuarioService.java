@@ -3,7 +3,10 @@ package com.miroslavka.gym.service;
 import at.favre.lib.crypto.bcrypt.BCrypt;
 import com.miroslavka.gym.entity.Usuario;
 import com.miroslavka.gym.repository.UsuarioRepository;
+import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -41,4 +44,16 @@ public class UsuarioService {
         return false;
     }
 
+
+    public Usuario getUserByEmail(String email) {
+
+        Optional<Usuario> optionalUsuario = usuarioRepository.findByEmail(email);
+
+        if (optionalUsuario.isPresent()) {
+
+            Usuario usuario = optionalUsuario.get();
+            return usuario;
+        }
+        return null;
+    }
 }
